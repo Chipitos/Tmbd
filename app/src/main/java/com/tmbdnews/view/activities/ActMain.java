@@ -37,7 +37,10 @@ public class ActMain extends BaseBindingActivity<ActMainBinding> {
         Observable<ResponseGetConfig> bb = service.getConfig();
         bb.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleResponse);
+                .subscribe(this::handleResponse, this::handlerError);
+    }
+
+    private void handlerError(Throwable throwable) {
     }
 
 
