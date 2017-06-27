@@ -3,11 +3,9 @@ package com.tmbdnews.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.tmbdnews.App;
-import com.tmbdnews.PerActivity;
+import com.tmbdnews.annotations.PerActivity;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @PerActivity
 public class SharedPreferenceUtils {

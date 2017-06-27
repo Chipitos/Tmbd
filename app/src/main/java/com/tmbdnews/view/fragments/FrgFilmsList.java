@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.tmbdnews.App;
 import com.tmbdnews.R;
+import com.tmbdnews.annotations.Layout;
 import com.tmbdnews.databinding.FrgFilmsListBinding;
 import com.tmbdnews.model.ConfigAndTopRated;
 import com.tmbdnews.model.TopRated;
@@ -27,6 +28,8 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
 
+
+@Layout(R.layout.frg_films_list)
 public class FrgFilmsList extends BaseBindingFragment<FrgFilmsListBinding, FrgFilmListViewModel> implements FilmsAdapter.ListItemClickListener, Handlers.FilmListHandlers {
     private GridLayoutManager manager;
     private FilmsAdapter adapter;
@@ -52,11 +55,6 @@ public class FrgFilmsList extends BaseBindingFragment<FrgFilmsListBinding, FrgFi
 
     public static FrgFilmsList newInstance() {
         return new FrgFilmsList();
-    }
-
-    @Override
-    public int initLayout() {
-        return R.layout.frg_films_list;
     }
 
     @Override

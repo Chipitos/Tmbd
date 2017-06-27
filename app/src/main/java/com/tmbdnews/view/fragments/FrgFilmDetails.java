@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.tmbdnews.R;
+import com.tmbdnews.annotations.Layout;
 import com.tmbdnews.databinding.FrgFilmDetailsBinding;
 import com.tmbdnews.model.FilmDetails;
 import com.tmbdnews.server.ApiConstants;
@@ -13,7 +14,7 @@ import com.tmbdnews.viewmodel.FrgFilmDetailsViewModel;
 
 import java.util.Locale;
 
-
+@Layout(R.layout.frg_film_details)
 public class FrgFilmDetails extends BaseBindingFragment<FrgFilmDetailsBinding, FrgFilmDetailsViewModel> implements Handlers.FilmDetailsHandlers {
     private static final String ID_KEY = "idKey";
 
@@ -23,11 +24,6 @@ public class FrgFilmDetails extends BaseBindingFragment<FrgFilmDetailsBinding, F
         FrgFilmDetails fragment = new FrgFilmDetails();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public int initLayout() {
-        return R.layout.frg_film_details;
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tmbdnews.BR;
+import com.tmbdnews.annotations.Layout;
 import com.tmbdnews.model.ConfigAndTopRated;
 import com.tmbdnews.server.response.BaseResponse;
 import com.tmbdnews.server.response.ResponseGetConfig;
@@ -36,10 +37,6 @@ public abstract class BaseBindingFragment<B extends ViewDataBinding, V extends B
     private DlgProgress dlgProgress = DlgProgress.newInstance();
     protected CompositeDisposable compositeDisposable;
 
-    protected abstract
-    @LayoutRes
-    int initLayout();
-
     protected abstract V initViewModel();
 
     @Override
@@ -58,13 +55,13 @@ public abstract class BaseBindingFragment<B extends ViewDataBinding, V extends B
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (binding == null) {
-            int layout = initLayout();
+            int layout = getClass().getAnnotation(Layout.class).value();
             viewModel = initViewModel();
             if (viewModel == null) {
                 throw new IllegalStateException("viewModel must not be null and should be injected via getViewModel");
             }
             if (layout == 0) {
-                throw new IllegalStateException("layout must not be null and should be injected via getLayout");
+                throw new IllegalStateException("layout must not be null and should be described on @Layout annotation");
             }
             binding = DataBindingUtil.inflate(inflater, layout, container, false);
             binding.setVariable(BR.vm, viewModel);

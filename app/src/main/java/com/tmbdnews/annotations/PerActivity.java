@@ -1,4 +1,4 @@
-package com.tmbdnews;
+package com.tmbdnews.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
