@@ -8,15 +8,11 @@ import com.tmbdnews.R;
 import com.tmbdnews.databinding.FrgFilmDetailsBinding;
 import com.tmbdnews.model.FilmDetails;
 import com.tmbdnews.server.ApiConstants;
-import com.tmbdnews.utils.NetworkUtils;
 import com.tmbdnews.view.handlers.Handlers;
 import com.tmbdnews.viewmodel.FrgFilmDetailsViewModel;
 
 import java.util.Locale;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class FrgFilmDetails extends BaseBindingFragment<FrgFilmDetailsBinding, FrgFilmDetailsViewModel> implements Handlers.FilmDetailsHandlers {
     private static final String ID_KEY = "idKey";
@@ -57,7 +53,7 @@ public class FrgFilmDetails extends BaseBindingFragment<FrgFilmDetailsBinding, F
 
     @Override
     public void onRetryClick(View v) {
-        if (!NetworkUtils.isNetworkAvailable())
+        if (!networkUtils.isNetworkAvailable())
             return;
         getData();
     }
@@ -69,10 +65,6 @@ public class FrgFilmDetails extends BaseBindingFragment<FrgFilmDetailsBinding, F
 
     private void getData() {
         String url = String.format(Locale.getDefault(), ApiConstants.GET_MOVIE_BY_ID, getArguments().getInt(ID_KEY));
-        Observable<FilmDetails> filmDetailsObservable = service.getFilmDetails(url);
-        filmDetailsObservable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(this::onBeginResponse)
-                .subscribe(this::handleResponse, this::handleError, this::onCompleteResponse);
+        createRequest(service.getFilmDetails(url), this::handleResponse, true);
     }
 }

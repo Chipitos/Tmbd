@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.tmbdnews.server.IRetrofitService;
+import com.tmbdnews.utils.NetworkUtils;
+import com.tmbdnews.utils.SharedPreferenceUtils;
 import com.tmbdnews.view.activities.BaseInjectActivity;
 import com.tmbdnews.view.navigation.Navigator;
 
@@ -17,6 +19,13 @@ public abstract class BaseInjectFragment extends Fragment {
 
     @Inject
     Navigator navigator;
+
+    @Inject
+    protected NetworkUtils networkUtils;
+
+
+    @Inject
+    protected SharedPreferenceUtils utils;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

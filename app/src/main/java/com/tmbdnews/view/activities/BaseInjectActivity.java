@@ -9,14 +9,13 @@ import com.tmbdnews.di.component.ActivityComponent;
 import com.tmbdnews.di.component.DaggerActivityComponent;
 import com.tmbdnews.di.module.ActivityModule;
 import com.tmbdnews.server.IRetrofitService;
+import com.tmbdnews.utils.SharedPreferenceUtils;
 import com.tmbdnews.view.navigation.Navigator;
 
 import javax.inject.Inject;
 
 
 public abstract class BaseInjectActivity extends AppCompatActivity {
-    @Inject
-    protected IRetrofitService service;
     @Inject
     Navigator navigator;
 

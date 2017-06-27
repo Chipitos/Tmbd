@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.tmbdnews.di.module.AppModule;
+import com.tmbdnews.di.module.UtilsModule;
+import com.tmbdnews.utils.NetworkUtils;
 import com.tmbdnews.utils.ResUtils;
 import com.tmbdnews.viewmodel.BaseInjectViewModel;
 
@@ -13,7 +15,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = AppModule.class)
+@Component(modules = {AppModule.class, UtilsModule.class})
 
 public interface AppComponent {
 
@@ -24,4 +26,6 @@ public interface AppComponent {
     Context getContext();
 
     ResUtils getResUtils();
+
+    NetworkUtils getNetworkUtils();
 }

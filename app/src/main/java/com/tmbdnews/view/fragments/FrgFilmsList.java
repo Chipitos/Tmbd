@@ -9,10 +9,12 @@ import android.view.View;
 import com.tmbdnews.App;
 import com.tmbdnews.R;
 import com.tmbdnews.databinding.FrgFilmsListBinding;
+import com.tmbdnews.model.ConfigAndTopRated;
 import com.tmbdnews.model.TopRated;
 import com.tmbdnews.server.response.BaseResponse;
+import com.tmbdnews.server.response.ResponseGetConfig;
 import com.tmbdnews.server.response.ResponseGetTopRated;
-import com.tmbdnews.utils.NetworkUtils;
+import com.tmbdnews.utils.SharedPreferenceUtils;
 import com.tmbdnews.view.adapters.FilmsAdapter;
 import com.tmbdnews.view.handlers.Handlers;
 import com.tmbdnews.viewmodel.FrgFilmListViewModel;
@@ -21,6 +23,8 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
 
 public class FrgFilmsList extends BaseBindingFragment<FrgFilmsListBinding, FrgFilmListViewModel> implements FilmsAdapter.ListItemClickListener, Handlers.FilmListHandlers {
@@ -29,6 +33,7 @@ public class FrgFilmsList extends BaseBindingFragment<FrgFilmsListBinding, FrgFi
     private int currentPage = 1;
     private int totalPage;
     private boolean loading = true;
+
     private final RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -71,8 +76,12 @@ public class FrgFilmsList extends BaseBindingFragment<FrgFilmsListBinding, FrgFi
             viewModel.isShowEmptyView.set(false);
             ResponseGetTopRated getTopRated = (ResponseGetTopRated) response;
             initRecyclerView(getTopRated.getResults());
+        } else if (response instanceof ResponseGetConfig) {
+            ResponseGetConfig responseGetConfig = (ResponseGetConfig) response;
+            utils.saveString(SharedPreferenceUtils.BASE_URL, responseGetConfig.getConfig().getBaseUrl());
         }
     }
+
 
     private void handleResponseWithOffset(BaseResponse response) {
         if (response instanceof ResponseGetTopRated) {
@@ -93,7 +102,7 @@ public class FrgFilmsList extends BaseBindingFragment<FrgFilmsListBinding, FrgFi
     }
 
     private void onOffsetChanged() {
-        if (!NetworkUtils.isNetworkAvailable()) {
+        if (!networkUtils.isNetworkAvailable()) {
             showEmptyView();
             return;
         }
@@ -102,10 +111,7 @@ public class FrgFilmsList extends BaseBindingFragment<FrgFilmsListBinding, FrgFi
         ++currentPage;
         loading = false;
         viewModel.isProgressVisible.set(true);
-        Observable<ResponseGetTopRated> bb = service.getTopRated(currentPage);
-        bb.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleResponseWithOffset, this::handleError);
+        createRequest(service.getTopRated(currentPage), this::handleResponseWithOffset, false);
     }
 
     private void initRecyclerView(List<TopRated> list) {
@@ -130,18 +136,39 @@ public class FrgFilmsList extends BaseBindingFragment<FrgFilmsListBinding, FrgFi
 
     @Override
     public void onRetryClick(View v) {
-        if (!NetworkUtils.isNetworkAvailable())
+        if (!networkUtils.isNetworkAvailable())
             return;
         getData();
     }
 
     private void getData() {
-        if (NetworkUtils.getBaseUrl() == null)
-            getActMain().getConfig();
-        Observable<ResponseGetTopRated> responseGetTopRatedObservable = service.getTopRated(currentPage);
-        responseGetTopRatedObservable.subscribeOn(Schedulers.io())
+        if (!networkUtils.isNetworkAvailable()) {
+            showEmptyView();
+            return;
+        }
+        if (networkUtils.getBaseUrl() == null)
+            createZipRequest(mergeEmittedItems(), service.getConfig(), service.getTopRated(currentPage));
+        else
+            createRequest(service.getTopRated(currentPage), this::handleResponse, true);
+    }
+
+
+    @NonNull
+    private BiFunction<ResponseGetConfig, ResponseGetTopRated, ConfigAndTopRated> mergeEmittedItems() {
+        return (responseGetConfig, responseGetTopRated) -> new ConfigAndTopRated(responseGetConfig.getConfig(), responseGetTopRated.getResults());
+    }
+
+    private void createZipRequest(BiFunction function, Observable responseGetConfigObservable, Observable responseGetTopRatedObservable) {
+        Observable<ConfigAndTopRated> combined = Observable.zip(responseGetConfigObservable, responseGetTopRatedObservable, function);
+        compositeDisposable.add(combined.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(this::onBeginResponse)
-                .subscribe(this::handleResponse, this::handleError, this::onCompleteResponse);
+                .subscribe(this::handleMerge, this::handleError, this::onCompleteResponse));
+    }
+
+    private void handleMerge(ConfigAndTopRated configAndTopRated) {
+        utils.saveString(SharedPreferenceUtils.BASE_URL, configAndTopRated.getConfig().getBaseUrl());
+        viewModel.isShowEmptyView.set(false);
+        initRecyclerView(configAndTopRated.getTopRated());
     }
 }

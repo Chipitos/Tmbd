@@ -5,13 +5,25 @@ import android.net.ConnectivityManager;
 
 import com.tmbdnews.App;
 
-public class NetworkUtils {
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-    public static boolean isNetworkAvailable() {
-        return ((ConnectivityManager) App.getComponent().getContext().getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
+@Singleton
+public class NetworkUtils {
+    private Context context;
+    private SharedPreferenceUtils utils;
+
+    @Inject
+    public NetworkUtils(Context context, SharedPreferenceUtils utils){
+        this.context = context;
+        this.utils = utils;
     }
 
-    public static String getBaseUrl() {
-        return SharedPreferenceUtils.readString(SharedPreferenceUtils.BASE_URL);
+    public boolean isNetworkAvailable() {
+        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
+    }
+
+    public String getBaseUrl() {
+        return utils.readString(SharedPreferenceUtils.BASE_URL);
     }
 }

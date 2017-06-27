@@ -2,15 +2,15 @@ package com.tmbdnews.server.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.tmbdnews.model.Images;
+import com.tmbdnews.model.Config;
 
 public class ResponseGetConfig extends BaseResponse {
 
     @SerializedName("images")
     @Expose
-    private Images images;
+    private Config config;
 
-    public Images getImages() {
-        return images;
+    public Config getConfig() {
+        return config;
     }
 }

@@ -10,7 +10,7 @@ public class ResUtils {
     private final Context context;
 
     @Inject
-    ResUtils(Context context) {
+    public ResUtils(Context context) {
         this.context = context;
     }
 

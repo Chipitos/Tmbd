@@ -31,7 +31,7 @@ public class FrgFilmDetailsViewModel extends BaseViewModel<FilmDetails> {
 
     @Bindable
     public String getImageUrl() {
-        return NetworkUtils.getBaseUrl() + IMAGE_SIZE + item.getPosterPath();
+        return networkUtils.getBaseUrl() + IMAGE_SIZE + item.getPosterPath();
     }
 
 

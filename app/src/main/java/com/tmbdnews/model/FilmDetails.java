@@ -2,11 +2,12 @@ package com.tmbdnews.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.tmbdnews.server.response.BaseResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilmDetails {
+public class FilmDetails extends BaseResponse{
 
     @SerializedName("genres")
     @Expose
