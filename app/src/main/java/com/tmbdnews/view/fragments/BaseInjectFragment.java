@@ -17,9 +17,6 @@ import javax.inject.Inject;
 
 
 public abstract class BaseInjectFragment extends Fragment {
-    
-    private BaseInjectActivity activity;
-
     @Inject
     protected IRetrofitService service;
 
@@ -36,13 +33,14 @@ public abstract class BaseInjectFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        activity = (BaseInjectActivity) getActivity();
+        BaseInjectActivity activity = (BaseInjectActivity) getActivity();
         activity.buildComponent().inject(this);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        BaseInjectActivity activity = (BaseInjectActivity) getActivity();
         navigator = activity.getNavigator();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
