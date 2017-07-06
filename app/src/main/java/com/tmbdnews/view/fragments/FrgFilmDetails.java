@@ -33,8 +33,10 @@ public class FrgFilmDetails extends BaseBindingFragment<FrgFilmDetailsBinding, F
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        binding.setHandlers(this);
-        getData();
+        if (savedInstanceState == null) {
+            binding.setHandlers(this);
+            getData();
+        }
     }
 
     private void handleResponse(FilmDetails filmDetails) {

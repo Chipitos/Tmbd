@@ -28,11 +28,14 @@ public class Navigator {
     }
 
     private void showFragment(Fragment frg, boolean addToBackStack) {
+        if (fragmentManager.findFragmentByTag(frg.getClass().getSimpleName()) != null)
+            return;
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.fragment_container, frg, frg.getClass().getSimpleName());
         if (addToBackStack)
             ft.addToBackStack(frg.getClass().getSimpleName());
         ft.commitAllowingStateLoss();
+        fragmentManager.executePendingTransactions();
     }
 
     private void showFragmentWithoutReplace(Fragment frg, boolean addToBackStack) {
@@ -41,6 +44,7 @@ public class Navigator {
         if (addToBackStack)
             ft.addToBackStack(frg.getClass().getSimpleName());
         ft.commitAllowingStateLoss();
+        fragmentManager.executePendingTransactions();
     }
 
     public void finish() {

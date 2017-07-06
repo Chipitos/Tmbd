@@ -65,8 +65,10 @@ public class FrgFilmsList extends BaseBindingFragment<FrgFilmsListBinding, FrgFi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.setHandlers(this);
-        getData();
+        if (savedInstanceState == null) {
+            binding.setHandlers(this);
+            getData();
+        }
     }
 
     private void handleResponse(BaseResponse response) {

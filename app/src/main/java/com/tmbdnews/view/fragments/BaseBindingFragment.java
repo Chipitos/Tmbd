@@ -3,7 +3,6 @@ package com.tmbdnews.view.fragments;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,23 +10,15 @@ import android.view.ViewGroup;
 
 import com.tmbdnews.BR;
 import com.tmbdnews.annotations.Layout;
-import com.tmbdnews.model.ConfigAndTopRated;
 import com.tmbdnews.server.response.BaseResponse;
-import com.tmbdnews.server.response.ResponseGetConfig;
-import com.tmbdnews.server.response.ResponseGetTopRated;
-import com.tmbdnews.view.activities.ActMain;
 import com.tmbdnews.view.dialogs.DlgProgress;
 import com.tmbdnews.viewmodel.BaseInjectViewModel;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -54,6 +45,7 @@ public abstract class BaseBindingFragment<B extends ViewDataBinding, V extends B
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         if (binding == null) {
             int layout = getClass().getAnnotation(Layout.class).value();
             viewModel = initViewModel();
