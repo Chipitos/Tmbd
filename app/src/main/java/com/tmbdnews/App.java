@@ -18,6 +18,7 @@ public class App extends Application {
         super.onCreate();
         component = buildComponent();
         component.inject(this);
+        System.out.println("test");
     }
 
     private AppComponent buildComponent() {
